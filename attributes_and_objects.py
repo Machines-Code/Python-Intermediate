@@ -38,8 +38,8 @@ class Employee2:
         self.name = "Ben"
 
     @staticmethod
-    # Without this line, welcomeMessage() will not be expecting a parameter, but will receive one later in the program, which returns an error.
-    # The @staticmethod decorator extends the functionality of the function and allows Python to ignore the binding of the object.
+    # Without this line, welcomeMessage() will not be expecting a parameter, but will receive one later in the program, which returns an error
+    # The @staticmethod decorator extends the functionality of the function and allows Python to ignore the binding of the object
     def welcomeMessage():
         print("Welcome to our organisation!")
 
