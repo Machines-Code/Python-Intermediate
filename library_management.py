@@ -1,16 +1,18 @@
 class Library:
-    book_library = ["Harry Potter", "Lord of the Rings", "Wheel of Time"]
+    def __init__(self):
+        self.book_library = ["Harry Potter", "Lord of the Rings", "Wheel of Time"]
 
-    def borrowBook(self, book_taken):
-        Library.book_library.remove(book_taken)
+    def borrow_book(self, book_taken):
+        self.book_library.remove(book_taken)
 
-    def returnBook(self, book_returned):
-        Library.book_library.append(book_returned)
+    def return_book(self, book_returned):
+        self.book_library.append(book_returned)
 
 
 class UserInteraction:
 
     def __init__(self):
+        self.library = Library()
         self.menu_options = {
             1: ("See full library", self.handle_library),
             2: ("Borrow a book", self.handle_borrow),
@@ -23,25 +25,25 @@ class UserInteraction:
             print(f"{option}: {label}")
 
     def handle_library(self):
-        current_library = ", ".join(Library.book_library)
+        current_library = ", ".join(self.library.book_library)
         print(current_library)
 
     def handle_borrow(self):
         while True:
             book_borrowed = input("Which book would you like to borrow?: ")
-            if book_borrowed not in Library.book_library:
+            if book_borrowed not in self.library.book_library:
                 print("Please select a book that is available in the library.")
             else:
-                Library.borrowBook(book_borrowed)
+                self.library.borrow_book(book_borrowed)
                 break
 
     def handle_return(self):
         while True:
             book_returned = input("Which book have you returned?: ")
-            if book_returned in Library.book_library:
+            if book_returned in self.library.book_library:
                 print("This book is already in the library.")
             else:
-                Library.returnBook(book_returned)
+                self.library.return_book(book_returned)
                 break
 
     @staticmethod
