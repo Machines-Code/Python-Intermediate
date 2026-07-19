@@ -24,6 +24,9 @@ class Animal(ABC):
     def _hunger(self, new_hunger_level):
         self.hunger_level = new_hunger_level
 
+    def eat(self):
+        self._hunger = 0
+
     @abstractmethod
     def dietary_classification(self):
         return ""
@@ -40,13 +43,17 @@ class Animal(ABC):
 class SwimmableMixin:
 
     def swim(self):
-        pass
+        print(
+            f"{self.name} has now gone for a swim around! But now they are hungry...")
+        self.hunger_level = 1
 
 
 class FlyableMixin:
 
     def fly(self):
-        pass
+        print(
+            f"{self.name} has now gone for a flight around the enclosere! But now they are hungry...")
+        self.hunger_level = 1
 
 
 class Mammal(Animal):
@@ -90,9 +97,6 @@ class Lion(Mammal):
         super().__init__(name, weight, fur_colour, hunger_level)
         self.canine_length = canine_length
 
-    def eat(self):
-        Animal._hunger.fset(self, 0)
-
     def dietary_classification(self):
         return "Carnivore"
 
@@ -109,22 +113,16 @@ class Otter(Mammal, SwimmableMixin):
 
     def __init__(self, name, weight, fur_colour, tail_length, hunger_level):
         super().__init__(name, weight, fur_colour, hunger_level)
-        self.tail_length - tail_length
-
-    def eat(self):
-        Animal._hunger.fset(self, 0)
+        self.tail_length = tail_length
 
     def dietary_classification(self):
-        "Carnivore"
+        return "Carnivore"
 
     def make_sound(self):
         return "Squeek"
 
     def species(self):
         return "Otter"
-
-    def swim(self):
-        pass
 
 
 class Penguin(Bird, SwimmableMixin):
@@ -135,9 +133,6 @@ class Penguin(Bird, SwimmableMixin):
         super().__init__(name, weight, wingspan, hunger_level)
         self.waddle_speed = waddle_speed
 
-    def eat(self):
-        Animal._hunger.fset(self, 0)
-
     def dietary_classification(self):
         return "Carnivore"
 
@@ -146,9 +141,6 @@ class Penguin(Bird, SwimmableMixin):
 
     def species(self):
         return "Penguin"
-
-    def swim(self):
-        pass
 
 
 class Owl(Bird, FlyableMixin):
@@ -159,9 +151,6 @@ class Owl(Bird, FlyableMixin):
         super().__init__(name, weight, wingspan, hunger_level)
         self.flight_sound_level_db = flight_sound_level_db
 
-    def eat(self):
-        Animal._hunger.fset(self, 0)
-
     def dietary_classification(self):
         return "Carnivore"
 
@@ -171,9 +160,6 @@ class Owl(Bird, FlyableMixin):
     def species(self):
         return "Owl"
 
-    def fly(self):
-        pass
-
 
 class Ostrich(Bird):
 
@@ -182,9 +168,6 @@ class Ostrich(Bird):
     def __init__(self, name, weight, wingspan, run_speed, hunger_level):
         super().__init__(name, weight, wingspan, hunger_level)
         self.run_speed = run_speed
-
-    def eat(self):
-        Animal._hunger.fset(self, 0)
 
     def dietary_classification(self):
         return "Omnivore"
@@ -204,9 +187,6 @@ class Snake(Reptile):
         super().__init__(name, weight, scale_texture, hunger_level)
         self.poison_level = poison_level
 
-    def eat(self):
-        Animal._hunger.fset(self, 0)
-
     def dietary_classification(self):
         return "Carnivore"
 
@@ -225,9 +205,6 @@ class Crocodile(Reptile, SwimmableMixin):
         super().__init__(name, weight, scale_texture, hunger_level)
         self.bite_force_N = bite_force_N
 
-    def eat(self):
-        Animal._hunger.fset(self, 0)
-
     def dietary_classification(self):
         return "Carnivore"
 
@@ -237,9 +214,6 @@ class Crocodile(Reptile, SwimmableMixin):
     def species(self):
         return "Crocodile"
 
-    def swim(self):
-        pass
-
 
 class Komodo(Reptile):
 
@@ -248,9 +222,6 @@ class Komodo(Reptile):
     def __init__(self, name, weight, scale_texture, venom_strength, hunger_level):
         super().__init__(name, weight, scale_texture, hunger_level)
         self.venom_strength = venom_strength
-
-    def eat(self):
-        Animal._hunger.fset(self, 0)
 
     def dietary_classification(self):
         return "Carnivore"
@@ -264,16 +235,16 @@ class Komodo(Reptile):
 
 class Zoo:
 
-    _animal_list = {}
-
     def __init__(self):
         self.menu_options = {
             "1": ("Add an animal", self.add_animal),
             "2": ("List all animals", self.list_animals),
             "3": ("Feed a specific animal", self.feed_animal),
             "4": ("Feed all animals", self.feed_all),
-            "5": ("View an animal's details", self.view_animal_details),
-            "6": ("Exit", self.handle_exit)
+            "5": ("Take animals for a swim", self.take_swim),
+            "6": ("Take animals for a fly around", self.take_flight),
+            "7": ("View an animal's details", self.view_animal_details),
+            "8": ("Exit", self.handle_exit)
         }
 
         self.animal_options = {
@@ -287,10 +258,20 @@ class Zoo:
             "8": ("Komodo Dragon", Komodo)
         }
 
+        self._animal_list = {}
+
     def show_menu(self):
 
         for number, (label, _) in self.menu_options.items():
             print(f"{number}. {label}")
+
+    def _select_animal(self, prompt):
+        self.prompt = prompt
+
+        for name in self._animal_list.keys():
+            print(f"{name}\n")
+
+        print(f"{self.prompt}")
 
     def add_animal(self):
 
@@ -311,51 +292,77 @@ class Zoo:
 
         # New technique learned with ** - unpacks a dictionary, allow you to use key-value pairs as arguments/parameters for functions and classes. Cool!
         new_animal = animal_class(hunger_level=1, **animal_class_details)
-        Zoo._animal_list[new_animal.name] = new_animal
+        self._animal_list[new_animal.name] = new_animal
         return new_animal
 
     def list_animals(self):
 
-        for field, entry in Zoo._animal_list.items():
+        for field, entry in self._animal_list.items():
             print(f"{field}. {entry}")
 
     def feed_animal(self):
 
-        for name, _ in self._animal_list.items():
-            print(f"{name}\n")
+        self._select_animal(
+            "Enter the name of the animal you would like to feed")
 
-        animal_name = str(
-            input("Enter the name of the animal you would like to feed: "))
+        animal_name = str(input())
 
-        Zoo._animal_list[animal_name].eat()
+        self._animal_list[animal_name].eat()
 
         print(f"{animal_name} has been fed.")
 
     def feed_all(self):
         for name, _ in self._animal_list.items():
-            Zoo._animal_list[name].eat()
+            self._animal_list[name].eat()
 
         print("All the animals at the zoo have been fed")
 
-# Functionality of this class is currently wrong and doesn't work. Fix required
+    def take_swim(self):
+
+        swim_choice = int(input(
+            "Would you like to take all the animals for a swim (1) or one animal for a swim (2)?: "))
+
+        if swim_choice == 1:
+            for animal in self._animal_list.values():
+                if hasattr(animal, "swim"):
+                    animal.swim()
+        elif swim_choice == 2:
+            self._select_animal("Enter the name of the animal from the list")
+
+            animal_name = str(input())
+            self._animal_list[animal_name].swim()
+
+    def take_flight(self):
+
+        flight_choice = int(input(
+            "Would you like to take all the animals for a fly around (1) or one animal for a fly around (2)?: "))
+
+        if flight_choice == 1:
+            for animal in self._animal_list.values():
+                if hasattr(animal, "fly"):
+                    animal.fly()
+        elif flight_choice == 2:
+            self._select_animal("Enter the name of the animal from the list")
+
+            animal_name = str(input())
+            self._animal_list[animal_name].fly()
+
     def view_animal_details(self):
 
         print("Current list of animals in the zoo:")
-        for name, _ in Zoo._animal_list.items():
-            print(f"{name}")
+        self._select_animal("Enter the name of the animal from the list")
 
-        animal_name = str(
-            input("Please enter the name of the animal you would like to inspect: "))
+        animal_name = str(input())
 
-        animal_details = vars(Zoo._animal_list[animal_name])
+        animal_details = vars(self._animal_list[animal_name])
 
         for field, entry in animal_details.items():
             print(f"{field.replace('_', ' ').capitalize()}: {entry}")
 
         print(
-            f"Dietary classification: {Zoo._animal_list[animal_name].dietary_classification()}")
-        print(f"Sound: {Zoo._animal_list[animal_name].make_sound()}")
-        print(f"Species: {Zoo._animal_list[animal_name].species()}")
+            f"Dietary classification: {self._animal_list[animal_name].dietary_classification()}")
+        print(f"Sound: {self._animal_list[animal_name].make_sound()}")
+        print(f"Species: {self._animal_list[animal_name].species()}")
 
     def handle_exit(self):
         return True
