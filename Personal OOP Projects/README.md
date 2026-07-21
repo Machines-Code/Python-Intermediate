@@ -1,6 +1,6 @@
 # Personal OOP Projects
 
-This folder contains projects I completed that have helped me practice Python OOP concepts and experiment with various techniques
+This folder contains projects I completed that have helped me practice Python OOP concepts and experiment with various techniques.
 
 The lessons and concepts learned in these projects are the following:
 
@@ -17,10 +17,10 @@ The projects completed in this section are the following:
 
 1. A zoo (zookeeper.py) program - A more complex program allowing a zookeeper to run and maintain a zoo of animals
     - Includes the following
-        * An ABC (Animal) c/w with abstract methods (dietary_classification, make_sound, and species), a _hunger property, a _hunger property setter, and an eat method
+        * An ABC (Animal) c/w abstract methods (dietary_classification, make_sound, and species), a _hunger property, a _hunger property setter, and an eat method
         * Two mixins (SwimmableMixin and FlyableMixin) which would be used later to take certain animals out for some exercise. This exercise in turn would make those animals hungry
-        * Mammal, Bird, and Reptile subclasses that inherit Animal as a parent class. These subclasses intitiate a "required_fields" list of animal prompts for later in the program when the zookeeper adds a new animal
-        * Eight leaf classes (Lion, Otter, Penguin, Owl, ostrich, Snake, Crocodile, and Komodo), each inheriting their relevant animal type subclass (Mammal, Bird, or Reptile) as well as their mixins (Swimmable or Flyable) accordingly. These leaf classes copy "required_fields" from their parent classes and append new fields to the list.
+        * Mammal, Bird, and Reptile subclasses that inherit Animal as a parent class. These subclasses initiate a "required_fields" list of animal prompts for later in the program when the zookeeper adds a new animal
+        * Eight leaf classes (Lion, Otter, Penguin, Owl, Ostrich, Snake, Crocodile, and Komodo), each inheriting their relevant animal type subclass (Mammal, Bird, or Reptile) as well as their mixins (Swimmable or Flyable) where appropriate. These leaf classes copy "required_fields" from their parent classes and append new, species-relevant fields to the list.
         * Finally, a Zoo class, which handles the zookeeper interaction. This class contains "_animal_list" (a registry of all animals currently in the zoo, along with their details), a dict containing "animal_options" (each animal species) in the form of a dispatch table, and a menu for the zookeeper to interact with (menu_options) in the form of a dispatch table
         * Functionalities available to the zookeeper are the following:
             1. Add an animal (here is where "required_fields" is used to prompt the zookeeper for the relevant information about the animal being added)
